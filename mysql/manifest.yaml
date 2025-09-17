@@ -1,0 +1,33 @@
+knid: Deployment
+apiVersion: apps/v1
+metadata: 
+  name: mysql
+# Deployment lables
+  labels: 
+    component: mysql
+    project: expense
+    tier: db
+  
+spec: 
+  replicas: 2
+  selector:
+    matchLables:
+      component: mysql
+      project: expense
+      tier: db
+
+# pod definition
+
+template:
+  metadata:
+    labels:
+      component: mysql
+      project: expense
+      tier: db
+
+  spec: 
+    containers:
+    - name: mysql
+      image: vasanth135/mysql:v1.0
+      
+

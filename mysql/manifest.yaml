@@ -1,7 +1,8 @@
-knid: Deployment
+kind: Deployment
 apiVersion: apps/v1
 metadata: 
   name: mysql
+  namespace: expense
 # Deployment lables
   labels: 
     component: mysql
@@ -18,16 +19,32 @@ spec:
 
 # pod definition
 
-template:
-  metadata:
-    labels:
-      component: mysql
-      project: expense
-      tier: db
+  template:
+    metadata:
+      labels:
+        component: mysql
+        project: expense
+        tier: db
 
-  spec: 
-    containers:
-    - name: mysql
-      image: vasanth135/mysql:v1.0
+    spec: 
+      containers:
+      - name: mysql
+        image: vasanth135/mysql:v1.0
       
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mysql
+  namespace: expense
+
+spec:
+  selector: 
+    component: mysql
+    project: expense
+    tier: db
+  ports:
+  - protocol: TCP
+    port: 3306
+    targetPort: 3306
 

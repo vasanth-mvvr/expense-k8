@@ -123,6 +123,13 @@ spec:
       containers:
       - name: frontend
         image: vasanth135/frontend:v1.0
+        resources:
+          requests:
+            cpu: "100m"
+            memory: "128Mi"
+          limits: 
+            cpu: "150m"
+            memory: "256Mi"
         volumeMounts: 
         - name: nginx-conf
           mountPath: /etc/nginx/nginx.conf
@@ -149,7 +156,7 @@ metadata:
   namespace: expense
 
 spec:
-  type: LoadBalancer
+  # type: LoadBalancer
   selector: 
     component: frontend
     project: expense
@@ -158,3 +165,15 @@ spec:
   - protocol: TCP
     port: 80
     targetPort: 8080
+---
+apiVersion: elbv2.k8s.aws/v1beta1
+kind: TargetGroupBinding
+metadata:
+  name: frontend
+  namespace: expense
+
+spec:
+  serviceRef:
+    name: frontend
+    port: 8080
+    targetGroupARN: 

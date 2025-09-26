@@ -4,7 +4,8 @@ metadata:
   name: backend
   namespace: expense
 data:
-  DB_HOST: mysql # mysql service component 
+  # DB_HOST: mysql # mysql service component 
+  DB_HOST: db-dev.vasanthreddy.space
 ---
 kind: Deployment
 apiVersion: apps/v1
@@ -35,9 +36,35 @@ spec:
         tier: app
 
     spec: 
+      initContainers:
+      - name: init-myservice
+        image: busybox:1.28
+        # command:: ['sh','-c',"until nslookup mysql; do echo waiting for myservice; sleep 2; done"]
+        command:: ['sh','-c',"until nslookup db-dev.vasanthreddy.space; do echo waiting for myservice; sleep 2; done"]
       containers:
       - name: backend
         image: vasanth135/backend:v1.0
+        resources:
+          requests:
+            cpu: "100m"
+            memory: "128Mi"
+          limits: 
+            cpu: "150m"
+            memory: "256Mi"
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8080
+          failureThreshold: 2
+          periodSeconds: 5
+          intialDelaySeconds: 30
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 8080
+          failureThreshold: 2
+          periodSeconds: 5
+          intialDelaySeconds: 30
         envFrom:
         - configMapRef:
             name: backend

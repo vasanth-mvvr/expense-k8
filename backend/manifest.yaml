@@ -64,7 +64,7 @@ spec:
             port: 8080
           failureThreshold: 2
           periodSeconds: 5
-          intialDelaySeconds: 30
+          initialDelaySeconds: 30
         envFrom:
         - configMapRef:
             name: backend

@@ -175,5 +175,5 @@ metadata:
 spec:
   serviceRef:
     name: frontend
-    port: 8080
+    port: 80
   targetGroupARN: arn:aws:elasticloadbalancing:us-east-1:656902114881:targetgroup/expense-dev-frontend/9db5c18f0d33ad29
